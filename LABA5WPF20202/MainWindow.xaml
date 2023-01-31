@@ -42,8 +42,9 @@
             </TextBlock.Background>
         </TextBlock>
         <TreeView Grid.Column="1" Grid.Row="3">
-            <TreeViewItem x:Name="dataTree"/>
+            <TreeViewItem Name="dataTree"/>
         </TreeView>
-        <DataGrid Grid.Column="3" Grid.Row="3" />
+        <DataGrid Grid.Column="3" Grid.Row="3" Name="DataTable" AutoGenerateColumns="False"/>
+
     </Grid>
 </Window>

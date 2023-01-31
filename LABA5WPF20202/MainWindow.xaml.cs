@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Documents;
 using System.Windows.Controls;
 using Newtonsoft.Json.Schema;
+using static LABA5WPF20202.MainWindow;
 
 namespace LABA5WPF20202
 {
@@ -17,12 +18,9 @@ namespace LABA5WPF20202
     /// </summary>
 
     public partial class MainWindow : Window
-    {   
-        private class Data
-        {
-            public object Content { get; set; }
-            public List<Data> Items { get; set; }
-        }
+    {
+        private Dictionary<Scheme, Table> schemesAndTablesDict = new Dictionary<Scheme, Table>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -39,24 +37,29 @@ namespace LABA5WPF20202
 
             string folderName = folderPath.Split("\\")[folderPath.Split("\\").Length - 1];
 
-
-
             dataTree.Header = folderName;
 
-            foreach (string fileName in Directory.EnumerateFiles(folderPath))
+            foreach (string filePath in Directory.EnumerateFiles(folderPath))
             {
-                if (fileName.Substring(fileName.Length - 4, 4) == "json")
+                if (filePath.Substring(filePath.Length - 4, 4) == "json")
                 {
-                    Scheme schemeOfTable = Scheme.ReadJson(fileName);
+                    Scheme schemeOfTable = Scheme.ReadJson(filePath);
                     
-                    string tableName = schemeOfTable.Name;
+                    string tableName = schemeOfTable.Name;                    
+                    string pathTable = filePath.Substring(0, filePath.Length - 12)+".csv";
                     
-                    //string pathTable = fileName.Substring(0, fileName.Length - 12);
-                    //Table table = TableReader.TableRead(schemeOfTable, pathTable);
+                    Table table = TableReader.TableRead(schemeOfTable, pathTable);
+                    
 
+                    schemesAndTablesDict.Add(schemeOfTable,table);
+                    
                     TreeViewItem tableTree = new TreeViewItem();
-                    tableTree.Selected += TableTreeSelected;
+
                     tableTree.Header = tableName;
+                    
+                    tableTree.Selected += TableTreeSelected;
+                    
+                    tableTree.Unselected += TableTreeUnselected;
                     
                     foreach (SchemeColumn key in schemeOfTable.Columns)
                     {
@@ -70,7 +73,32 @@ namespace LABA5WPF20202
 
         private void TableTreeSelected(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            DataTable.Columns.Clear();
+            string tableName = ((TreeViewItem)sender).Header.ToString();
+
+            foreach(var schemeAndTable in schemesAndTablesDict)
+            {
+                if (schemeAndTable.Key.Name==tableName)
+                {
+                    
+                    foreach (SchemeColumn column in schemeAndTable.Key.Columns)
+                    {
+                        DataGridTextColumn tableTextColumn = new DataGridTextColumn();
+                        tableTextColumn.Header = column.Name;
+                        DataTable.Columns.Add(tableTextColumn);
+                        
+                        foreach (Row row in schemeAndTable.Value.Rows)
+                        {
+                             DataTable.Items.Add("12");
+                        }    
+                    }
+                    break;
+                }
+            }   
+        }
+        private void TableTreeUnselected(object sender, RoutedEventArgs e)
+        {
+            DataTable.Columns.Clear();
         }
     }
 }

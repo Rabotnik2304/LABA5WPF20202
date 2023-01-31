@@ -12,8 +12,9 @@ namespace LABA5WPF20202
     {
         public static Table TableRead(Scheme schemeOfTable, string pathTable)
         {
+            
             string[] allLinesTable = File.ReadAllLines(pathTable);
-
+            
             Table table = new Table();
 
             for (int i = 0; i < allLinesTable.Length; i++)
