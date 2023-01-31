@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using System;
 using System.Windows.Input;
 using System.Windows.Documents;
+using System.Windows.Controls;
+using Newtonsoft.Json.Schema;
 
 namespace LABA5WPF20202
 {
@@ -25,16 +27,21 @@ namespace LABA5WPF20202
         {
             InitializeComponent();
         }
+        
         private void MenuOpenFileClick(object sender, RoutedEventArgs e)
         {
-            
             FolderBrowserDialog openFolderDialog = new FolderBrowserDialog();
             string folderPath = string.Empty;
             if (openFolderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 folderPath = openFolderDialog.SelectedPath;  //selected folder path
             }
-            List<Data> datas = new List<Data>();
+
+            string folderName = folderPath.Split("\\")[folderPath.Split("\\").Length - 1];
+
+
+
+            dataTree.Header = folderName;
 
             foreach (string fileName in Directory.EnumerateFiles(folderPath))
             {
@@ -42,22 +49,28 @@ namespace LABA5WPF20202
                 {
                     Scheme schemeOfTable = Scheme.ReadJson(fileName);
                     
-                    string tableName = fileName.Substring(folderPath.Length+1, fileName.Length - folderPath.Length-13);
+                    string tableName = schemeOfTable.Name;
                     
-                    Data tableData = new Data();
+                    //string pathTable = fileName.Substring(0, fileName.Length - 12);
+                    //Table table = TableReader.TableRead(schemeOfTable, pathTable);
 
-                    tableData.Content = tableName;
-                    List<Data> listOfFields = new List<Data>();
+                    TreeViewItem tableTree = new TreeViewItem();
+                    tableTree.Selected += TableTreeSelected;
+                    tableTree.Header = tableName;
                     
                     foreach (SchemeColumn key in schemeOfTable.Columns)
                     {
-                        listOfFields.Add(new Data() { Content = key.Name +"---"+ key.Type });
+                        tableTree.Items.Add(key.Name +"---"+ key.Type);
                     }
-                    tableData.Items = listOfFields;
-                    datas.Add(tableData);
+
+                    dataTree.Items.Add(tableTree);
                 }
-            }
-            TableTree.ItemsSource = datas;
+            }    
+        }
+
+        private void TableTreeSelected(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -36,21 +36,14 @@
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.InactiveCaptionColorKey}}"/>
             </TextBlock.Background>
         </TextBlock>
-        <TextBlock Grid.Column="3" Grid.Row ="1" Text="Source object properties" >
+        <TextBlock Grid.Column="3" Grid.Row ="1" Text="Table">
             <TextBlock.Background>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.InactiveCaptionColorKey}}"/>
             </TextBlock.Background>
         </TextBlock>
-
-        <TreeView x:Name="TableTree" Grid.Column="1" Grid.Row="3">
-            <TreeView.ItemTemplate >
-                <HierarchicalDataTemplate ItemsSource="{Binding Items}">
-                    <Label Content="{Binding Content}"/>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
+        <TreeView Grid.Column="1" Grid.Row="3">
+            <TreeViewItem x:Name="dataTree"/>
         </TreeView>
-
-        <TreeView Grid.Column="3" Grid.Row="3"/>
-
+        <DataGrid Grid.Column="3" Grid.Row="3" />
     </Grid>
 </Window>
