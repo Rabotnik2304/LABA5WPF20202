@@ -45,6 +45,5 @@
             <TreeViewItem Name="dataTree"/>
         </TreeView>
         <DataGrid Grid.Column="3" Grid.Row="3" Name="DataTable" AutoGenerateColumns="False"/>
-
     </Grid>
 </Window>
